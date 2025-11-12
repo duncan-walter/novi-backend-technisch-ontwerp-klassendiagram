@@ -1,0 +1,50 @@
+classDiagram
+    class User {
+        - id: int
+        - email: string
+        - password: string
+        - nickname: string
+    }
+    class UserRole {
+        - id: int
+        - name: string
+    }
+    class Product {
+        - id: int
+        - name: string
+        - price: double
+        - vatPercentage: double
+        - stockAmount: int
+        - combinableProducts: Product[]
+        - isArchived: boolean
+        + getCombinableProducts() Product[]
+    }
+    class ProductCategory {
+        <<Enumeration>>
+        TV_S,
+        REMOTES,
+        WALL_MOUNTS,
+        CI_MODULES
+    }
+    class Order {
+        - id: int
+        - orderDate: date
+        + addOrderLine(product: Product, quantity: int)
+    }
+    class OrderLine {
+        - id: int
+        - lineNumber: int
+        - quantity: int
+    }
+    %% Relations:
+    User --> "1" UserRole
+    Product --o "0..1" ProductCategory
+    Order "0..*" --* "1" User
+    Order "1" *--> "1..*" OrderLine
+    OrderLine --o "1" Product
+    %% Notes:
+    note for Product "A Product instance has a 0..*
+    aggregational relation to itself
+    which is stored in the combinableProducts
+    field. In the database this will be stored in a
+    'ProductCombination' table."
